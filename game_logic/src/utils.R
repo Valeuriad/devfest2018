@@ -1,3 +1,5 @@
+library("hashFunction")
+
 col_map = c("#000000FF", "#FFFFFFFF", "#00FF00FF")
 for(i in 1:length(G_IDS)){
   col_map = c(col_map,"#FF0000FF")
@@ -23,5 +25,5 @@ getManDist <- function(posA, posB){
 
 h <- function(x){
   return(paste(x, collapse = " "))
-  return(as.character(hashFunction::murmur3.32(paste0(x))))
+  #return(as.character(hashFunction::murmur3.32(paste0(x))))
 }
