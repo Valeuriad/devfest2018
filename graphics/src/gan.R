@@ -3,12 +3,13 @@ library(progress)
 library(abind)
 library(grid)
 library(magick)
+library("dplyr")
 k_set_image_data_format('channels_first')
 
 # Functions ---------------------------------------------------------------
 
 
-plotImages <- function(image){
+plotImages <- function(image, export = FALSE, ...){
   n <- floor(sqrt(dim(image)[1]))
   if(length(dim(image))>3){
     channel_first <- FALSE
@@ -42,7 +43,10 @@ plotImages <- function(image){
   image = (image + 1)/2
   image[image<=0] = .Machine$double.eps
   image[image>=1] = 1- .Machine$double.eps
-  grid.raster(EBImage::rotate(image, 180))
+  grid.raster(EBImage::rotate(image, 0))
+  if(export){
+    EBImage::writeImage(EBImage::rotate(image, 180), ...)
+  }
 }
 
 
@@ -58,21 +62,28 @@ build_generator <- function(latent_size, channels = 1){
     # Upsample to (..., 14, 14)
     layer_upsampling_2d(size = c(2, 2)) %>%
     layer_conv_2d(
-      64, c(5,5), padding = "same", activation = "tanh",
+      64, c(5,5), padding = "same", #activation = "tanh",
       kernel_initializer = "glorot_normal"
     ) %>%
+    layer_activation_leaky_relu(alpha = 0.01) %>% 
+    
     # Upsample to (..., 28, 28)
     layer_upsampling_2d(size = c(2, 2)) %>%
+     layer_conv_2d(
+       128, c(5,5), padding = "same", #activation = "tanh",
+       kernel_initializer = "glorot_normal"
+     ) %>%
+    layer_activation_leaky_relu(alpha = 0.01) %>% 
+    # layer_upsampling_2d(size = c(2, 2)) %>%
     # layer_conv_2d(
-    #   128, c(5,5), padding = "same", activation = "tanh",
+    #   256, c(5,5), padding = "same", activation = "tanh",
     #   kernel_initializer = "glorot_normal"
     # ) %>%
     # Take a channel axis reduction
     layer_conv_2d(
-      channels, c(5,5), padding = "same", activation = "tanh",
+      channels, c(5,5), padding = "same", #activation = "tanh",
       kernel_initializer = "glorot_normal"
-    )
-  
+    ) 
   latent <- layer_input(shape = list(latent_size))
   fake_image <- cnn(latent)
   
@@ -88,27 +99,20 @@ build_discriminator <- function(channels = 1){
       64, c(5,5), 
       padding = "same", 
       strides = c(2,2),
-      input_shape = c(channels, 28, 28), activation = "tanh"
+      input_shape = c(channels, 28, 28)#, activation = "tanh"
     ) %>%
-    #layer_activation_leaky_relu() %>%
+    layer_activation_leaky_relu(alpha = 0.01) %>%
     #layer_dropout(0.3) %>%
     layer_max_pooling_2d(pool_size = c(2,2)) %>%
     layer_conv_2d(
       128, c(5, 5), 
       padding = "same", 
-      strides = c(1,1),
-      activation = "tanh") %>%
-    #layer_activation_leaky_relu() %>%
+      #activation = "tanh"
+      strides = c(1,1)
+      ) %>%
+    layer_activation_leaky_relu(alpha = 0.01) %>%
     #layer_dropout(0.3) %>%  
     layer_max_pooling_2d(pool_size = c(2,2)) %>%
-    
-    # layer_conv_2d(128, c(3, 3), padding = "same", strides = c(2,2)) %>%
-    # layer_activation_leaky_relu() %>%
-    # layer_dropout(0.3) %>%  
-    # 
-    # layer_conv_2d(256, c(3, 3), padding = "same", strides = c(1,1)) %>%
-    # layer_activation_leaky_relu() %>%
-    # layer_dropout(0.3) %>%  
     
     layer_flatten()
   
@@ -130,12 +134,12 @@ build_discriminator <- function(channels = 1){
 
 
 # Data Preparation --------------------------------------------------------
-
-d <- readRDS("../data/proc/block//cdata.dat")
+d <- readRDS("../data/proc/pacman/cdata.dat")
+#d <- readRDS("../data/proc/tiles/cdata.dat")
 #dd <- readRDS("../data/proc/pg/data.dat")
 #d <- abind(d,dd,along = 1)
-d = abind(d,d, along = 1)
-
+#d = abind(d,d, along = 1)
+d[is.na(d)] = .Machine$double.eps
 channels = 1
 if(length(dim(d))>3){
   channels = dim(d)[4]
@@ -147,21 +151,25 @@ plotImages(d)
 
 train_indexes <- sample(1:dim(d)[1],size = floor(0.8*dim(d)[1]))
 test_indexes <- (1:dim(d)[1])[!(1:dim(d)[1])%in%train_indexes]
+num_train <- length(train_indexes)
+num_test <- length(test_indexes)
 dataset = c()
 if(channels>1){
   dataset$train$x <- d[train_indexes,,,]
   dataset$test$x <- d[test_indexes,,,]
+  dim(dataset$train$x) <- c(num_train, 3, 28, 28)
+  dim(dataset$test$x) <- c(num_test, 3, 28, 28)
 }else{
   dataset$train$x <- d[train_indexes,,]
   dataset$test$x <- d[test_indexes,,]  
+  dataset$train$x <- array_reshape(dataset$train$x, c(length(train_indexes), channels, 28, 28), order = "F")
+  dataset$test$x <- array_reshape(dataset$test$x, c(length(test_indexes), channels, 28, 28), order = "F")
+  
 }
 
 
-dataset$train$x <- array_reshape(dataset$train$x, c(length(train_indexes), channels, 28, 28))
-dataset$test$x <- array_reshape(dataset$test$x, c(length(test_indexes), channels, 28, 28))
 
-num_train <- length(train_indexes)
-num_test <- length(test_indexes)
+
 
 # Parameters --------------------------------------------------------------
 
@@ -349,10 +357,4 @@ for(epoch in 1:epochs){
   )
   
   plotImages(generated_images)
-  
-  
-
-
-  
-    
 }

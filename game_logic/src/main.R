@@ -1,6 +1,7 @@
 source("Engine.R")
 source("utils.R")
 engine <- Engine$new()
+engine$debug = T
 
 with(tf$Session() %as% sess, {
   agent$epsilon <- 0.01

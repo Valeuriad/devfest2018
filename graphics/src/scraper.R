@@ -36,9 +36,15 @@ exportData <- function(path = "../data/proc/gm/", export = TRUE){
   index = 1
   for(i in 1:length(imgs)){
     tryCatch({
-      x <- image_read(paste0(path,imgs[i])) %>%
-        image_background(color = "#FFFFFF") %>%
-        as_EBImage()
+      if(!grepl("tiles", path)){
+        x <- image_read(paste0(path,imgs[i])) %>%
+          image_background(color = "#FFFFFF") %>%
+          as_EBImage()  
+      }else{
+        x <- image_read(paste0(path,imgs[i])) %>%
+          as_EBImage()  
+      }
+      
       img <- resize(x, w = 28, h = 28)
       y <- img@.Data[,,1]+img@.Data[,,2]+img@.Data[,,3]
       scaler <- max(y)/2
@@ -60,7 +66,6 @@ exportData <- function(path = "../data/proc/gm/", export = TRUE){
       index <- index + 1 
       img <- rotate(img, 0)
       y <- img@.Data[,,1]+img@.Data[,,2]+img@.Data[,,3]
-      print(dim(img@.Data))
       d[index,,] <- (y-scaler) / scaler
       yy <- img@.Data[,,1:3]
       di <- dim(yy)
@@ -89,20 +94,19 @@ exportData <- function(path = "../data/proc/gm/", export = TRUE){
     saveRDS(d, paste0(path,"data.dat"))
     saveRDS(dd, paste0(path,"cdata.dat"))  
   }
-  
 }
 
 
 x <- c(
-  URLencode("ghost pixel art"),
-  URLencode("monster pixel art") 
+  URLencode("pacman pixel art"),
+  URLencode("pacman drawing"),
+  URLencode("pacman character")
 )
 n <- 200
 
-x <- URLencode("sprite block pixel art")
 importData(x,n)
-
-exportData()
-exportData(path = "../data/proc/pg/")
-
-exportData(path = "../data/proc/block/")
+exportData(path="../data/proc/pacman/")
+# exportData(path = "../data/proc/gm/")
+# exportData(path = "../data/proc/pg/")
+# exportData(path = "../data/proc/block/")
+# exportData(path = "../data/proc/tiles/")

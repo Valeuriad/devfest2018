@@ -1,7 +1,9 @@
 library("shiny")
 library("ggplot2")
 library("plotly")
-
+source("Engine.R")
+source("Agent.R")
+source("utils.R")
 ui <- fluidPage(
   
   titlePanel("AI Take Over"),
@@ -53,6 +55,16 @@ server <- function(input, output) {
      }   
   })
 }
+engine <- Engine$new()
+engine$debug = F
+agent <-
+  Agent$new(
+    input_shape = engine$N_MAP*engine$M_MAP,
+    output_dim = length(engine$ACTIONS_FUNC),
+    epsilon_last_episode = 100
+  )
+
+
 
 app = shinyApp(ui = ui, server = server)
 

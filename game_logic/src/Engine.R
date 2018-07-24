@@ -30,8 +30,8 @@ Engine <- R6Class(
       self$N_MAP = n
       self$M_MAP = m
       self$BLK_PROB = b_prob
-      self$G_IDS = P_ID + (1:gs)
-      self$loadState(path = "../data/map_1.dat")
+      self$G_IDS = self$P_ID + (1:gs)
+      self$loadState(path = "../data/map_3.dat")
       
     },
     setState = function(state = NULL) {
@@ -66,7 +66,7 @@ Engine <- R6Class(
     },
     resetState = function(state = self$state) {
       state[state > 0] = 0
-      for (i in 1:max(G_IDS)) {
+      for (i in 1:max(self$G_IDS)) {
         if (i == 1) {
           pos <- which(state == 0)[1]
         } else{
@@ -174,7 +174,7 @@ Engine <- R6Class(
           if (dist < last_dist) {
             reward = 1
           } else{
-            reward =  - 5 * log(iteration)
+            reward =  0
           }
         }
       }
@@ -189,14 +189,16 @@ Engine <- R6Class(
       while (self$isPlayerOk() & iteration < max_iteration) {
         reward = reward + self$playRound(agent, iteration, export, ...)
         iteration = iteration + 1
-        
-        print(paste0("Reward: ", reward))
-        print(paste0("Iteration: ", iteration))
+        if(self$debug){
+          print(paste0("Reward: ", reward))
+          print(paste0("Iteration: ", iteration))  
+        }
       }
       if (self$isPlayerOk()) {
         reward = reward - 200
       }
       print(paste0("Ended in ",iteration, " iterations - Reward: ",reward))
+      return(reward)
     }
   ), 
   private = list(

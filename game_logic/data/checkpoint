@@ -1,2 +1,2 @@
-model_checkpoint_path: "tfmodel_alt.mdl"
-all_model_checkpoint_paths: "tfmodel_alt.mdl"
+model_checkpoint_path: "tfmodel_alt_map3.mdl"
+all_model_checkpoint_paths: "tfmodel_alt_map3.mdl"

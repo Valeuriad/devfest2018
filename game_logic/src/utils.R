@@ -1,5 +1,5 @@
-library("hashFunction")
 
+G_IDS = c(2)
 col_map = c("#000000FF", "#FFFFFFFF", "#00FF00FF")
 for(i in 1:length(G_IDS)){
   col_map = c(col_map,"#FF0000FF")
@@ -15,13 +15,6 @@ DEBUG <- function(state, export = FALSE){
       dev.copy(png,paste0("../img/",today,"/",iteration,".png"))
       dev.off()  
     }
-    Sys.sleep(0.5)
+    Sys.sleep(0.25)
   }
-}
-
-
-
-h <- function(x){
-  return(paste(x, collapse = " "))
-  #return(as.character(hashFunction::murmur3.32(paste0(x))))
 }

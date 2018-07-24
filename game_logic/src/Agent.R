@@ -11,7 +11,7 @@ Agent <- R6Class(
         Q_target = NULL,
         pred = NULL,
         loss = NULL,
-        debug = TRUE,
+        debug = FALSE,
         train_op = NULL,
         epsilon_last_episode = 100,
         initialize = function(input_shape,
@@ -89,7 +89,7 @@ Agent <- R6Class(
             self$train_op <- optim$minimize(self$loss)
         },
         
-        get_action = function(state_, step) {
+        get_action = function(state_, step = 20) {
             if (runif(1) < self$epsilon) {
                 action <- sample.int(self$output_dim, size = 1) - 1L
                 if(self$debug){

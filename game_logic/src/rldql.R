@@ -62,6 +62,6 @@ with(tf$Session() %as% sess, {
       }
     }
   }
-  saver$save(sess,"../data/tfmodel_alt.mdl")
+  saver$save(sess,"../data/tfmodel_alt_map3.mdl")
 })
 
