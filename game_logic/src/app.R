@@ -57,16 +57,9 @@ server <- function(input, output) {
 }
 engine <- Engine$new()
 engine$debug = F
-agent <-
-  Agent$new(
-    input_shape = engine$N_MAP*engine$M_MAP,
-    output_dim = length(engine$ACTIONS_FUNC),
-    epsilon_last_episode = 100
-  )
-
 
 
 app = shinyApp(ui = ui, server = server)
 
-runApp(app, host = "0.0.0.0", port = 3515)
+#runApp(app, host = "0.0.0.0", port = 3515)
 

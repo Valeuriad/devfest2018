@@ -1,6 +1,6 @@
 library(R6)
 library(tensorflow)
-
+source("Engine.R")
 Agent <- R6Class(
     "Agent",
     public = list(
@@ -21,6 +21,7 @@ Agent <- R6Class(
             self$output_dim <- output_dim
             if (!is.null(epsilon_last_episode)) {
                 self$epsilon_last_episode <- epsilon_last_episode
+                self$epsilon = epsilon_last_episode
             }
             self$states <-
                 tf$placeholder(tf$float32,
@@ -155,6 +156,27 @@ bias_variable <- function(shape) {
   initial <- tf$constant(0.1, shape=shape)
   tf$Variable(initial)
 }
+
+agent <-
+  Agent$new(
+    input_shape = engine$N_MAP*engine$M_MAP,
+    output_dim = length(engine$ACTIONS_FUNC),
+    epsilon_last_episode = 0.01
+  )
+
+
+#* @get /bot_next_move
+#* @post /bot_next_move
+function(state=NULL){
+  with(tf$Session() %as% sess, {
+    saver <- tf$train$Saver()
+    saver$restore(sess, "../data/tfmodel_alt.mdl")
+    action = agent$get_action(state)
+    return(action)
+    
+  })  
+}
+
 # 
 # tf$reset_default_graph()
 # agent <- Agent$new(N_MAP*M_MAP, length(ACTIONS_FUNC), 0)
