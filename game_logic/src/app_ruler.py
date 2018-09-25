@@ -13,14 +13,13 @@ with open(filename_model, 'rb') as file:
     model = pickle.load(file)
 
 
-@app.route("/predict")
+@app.route("/predict", methods=['GET', 'POST'])
 def predict():
 
     if request.data:
-        data = request.data.get_json()
+        data = request.get_json()
     else:
         data = request.values
-
     x = pd.DataFrame(
         {
             'pos_x': [data['pos_x']],
