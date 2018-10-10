@@ -164,14 +164,29 @@ agent <-
     epsilon_last_episode = 0.01
   )
 
+#* @filter cors
+cors <- function(req,res){
+  res$setHeader("Access-Control-Allow-Origin","*")
+  if (req$REQUEST_METHOD == "OPTIONS"){
+    res$setHeader("Acess-Control-Allow-Methods","*")
+    res$setHeader("Access-Control-Allow-Headers",req$HTTP_ACCESS_CONTROL_REQUEST_HEADERS)
+    res$status <- 200
+    return(list())
+  }  else{
+    plumber::forward()  
+  }
+  
+}
 
 #* @get /bot_next_move
 #* @post /bot_next_move
-function(state=NULL){
+function(rawMap=NULL){
+  rawMap <- as.vector(t(rawMap[nrow(rawMap):1,])-1)
   with(tf$Session() %as% sess, {
     saver <- tf$train$Saver()
     saver$restore(sess, "../data/tfmodel_alt.mdl")
-    action = agent$get_action(state)
+    action = agent$get_action(rawMap, step = 100) + 1
+    print(paste("BOt PLaying ==>",action))
     return(action)
     
   })  

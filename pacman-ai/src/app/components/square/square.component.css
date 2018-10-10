@@ -1,0 +1,8 @@
+.square {
+    border: black solid thin;
+    background-image: url("../../../assets/square.png");
+    height: 64px;
+    width: 64px;
+    position: relative;
+    display:inline-block
+}

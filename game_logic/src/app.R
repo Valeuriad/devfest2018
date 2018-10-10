@@ -38,7 +38,7 @@ server <- function(input, output) {
     userSelection$data <- NULL
   })
   output$output <- renderPlot({
-    print(userSelection$data)
+    print(paste("User playing ==> ",userSelection$data))
      if(is.null(userSelection$data)){
        engine$resetState()
        return(DEBUG(engine$getState()))

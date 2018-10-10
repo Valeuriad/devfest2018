@@ -1,0 +1,14 @@
+<div ng-inp>
+
+  <div class="line" *ngFor="let lignes of map.rawMap">
+
+    <span class="tile" *ngFor="let col of lignes">
+
+      <app-square class="tile" *ngIf="col == 0"></app-square>
+      <app-wall class="tile" *ngIf="col == 1"></app-wall>
+      <app-pacman class="tile" *ngIf="col == 2"></app-pacman>
+      <app-ghost class="tile" *ngIf="col == 3"></app-ghost>
+    </span>
+  </div>
+
+</div>

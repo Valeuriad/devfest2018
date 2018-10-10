@@ -1,5 +1,5 @@
 library("R6")
-
+source("utils.R")
 Engine <- R6Class(
   "Engine",
   public = list(
@@ -31,7 +31,7 @@ Engine <- R6Class(
       self$M_MAP = m
       self$BLK_PROB = b_prob
       self$G_IDS = self$P_ID + (1:gs)
-      self$loadState(path = "../data/map_3.dat")
+      self$loadState(path = ifelse(file.exists("../data/map_3.dat"),"../data/map_3.dat","map_3.dat"))
       
     },
     setState = function(state = NULL) {
@@ -159,6 +159,8 @@ Engine <- R6Class(
           self$last_played_action = action
         }
         
+        print(self$state)
+        print(paste("BOt PLaying ==>",action))
         self$applyAction(id = i, action = action)
         
   

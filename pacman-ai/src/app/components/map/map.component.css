@@ -1,0 +1,9 @@
+.tile {
+    display:inline-block;
+    height: 0px;
+
+}
+
+.line {
+    height: 64px;;
+}

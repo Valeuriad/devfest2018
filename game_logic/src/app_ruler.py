@@ -5,9 +5,9 @@ from flask import jsonify
 from sklearn.ensemble import RandomForestClassifier
 import pickle
 import pandas as pd
-
+from flask_cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 filename_model = "rnf.model"
 with open(filename_model, 'rb') as file:
     model = pickle.load(file)
@@ -34,6 +34,17 @@ def predict():
     print(res)
     return jsonify({'pred':int(res[0])})
 
+
+@app.route("/map", methods = ['GET', 'POST'])
+def get_map():
+    return jsonify({'rawMap': [ [1, 0, 1, 1, 3, 0, 0, 0],
+                                [1, 0, 0, 1, 1, 0, 0, 1],
+                                [0, 0, 0, 1, 0, 0, 0, 1],
+                                [0, 0, 0, 1, 0, 0, 1, 0],
+                                [0, 1, 1, 1, 0, 0, 0, 0],
+                                [1, 1, 0, 1, 0, 1, 0, 1],
+                                [1, 1, 0, 0, 0, 1, 0, 1],
+                                [0, 2, 1, 1, 1, 0, 0, 0],]})
 
 
 if __name__ == "__main__":

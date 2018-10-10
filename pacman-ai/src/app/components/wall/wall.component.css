@@ -1,0 +1,8 @@
+.wall {
+    border: black thin solid;
+    background-image: url("../../../assets/wall.png");
+    height: 64px;
+    width: 64px;
+    position: relative;
+    display:inline-block
+}
