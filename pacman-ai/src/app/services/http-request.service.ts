@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/platform-browser';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GameMap } from '../models/game-map';
@@ -19,7 +21,12 @@ export class HttpRequestService {
   private size: number;
   private iteration: number = 0;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any) {
+    this.rootUrl_py = "http://"+document.location.hostname+":5000";
+    this.rootUrl_R = "http://"+document.location.hostname+":4242";
+    this.mapUrl = this.rootUrl_py + "/map";
+    this.predictUrl = this.rootUrl_py + "/predict";
+    this.ghostUrl = this.rootUrl_R + "/bot_next_move";
   }
 
   public getMap(size: number): Observable<GameMap> {
