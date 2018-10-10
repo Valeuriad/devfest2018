@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    background-color: #C15017;
+    background-image: url("./assets/devfest_header.jpg");
+    background-repeat: no-repeat;
+}
