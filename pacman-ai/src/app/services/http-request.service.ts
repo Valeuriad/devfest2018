@@ -11,8 +11,8 @@ import { GHOST_MOVE } from '../models/ghost-move.enum';
   providedIn: 'root'
 })
 export class HttpRequestService {
-  private rootUrl_py = "http://localhost:8080";
-  private rootUrl_R = "http://localhost:8080";
+  private rootUrl_py = "http://localhost:5000";
+  private rootUrl_R = "http://localhost:4242";
   private mapUrl = this.rootUrl_py + "/map";
   private predictUrl = this.rootUrl_py + "/predict";
   private ghostUrl = this.rootUrl_R + "/bot_next_move";
