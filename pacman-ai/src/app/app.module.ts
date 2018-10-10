@@ -10,9 +10,8 @@ import { SquareComponent } from './components/square/square.component';
 import { WallComponent } from './components/wall/wall.component';
 import { PacmanComponent } from './components/pacman/pacman.component';
 import { GhostComponent } from './components/ghost/ghost.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { VictoryComponent } from './victory/victory.component';
-import { GameOverComponent } from './game-over/game-over.component';
+import { VictoryComponent } from './components/victory/victory.component';
+import { GameOverComponent } from './components/game-over/game-over.component';
 import { AppRoutes } from './app.routes';
 
 @NgModule({
@@ -23,7 +22,6 @@ import { AppRoutes } from './app.routes';
     WallComponent,
     PacmanComponent,
     GhostComponent,
-    WelcomeComponent,
     VictoryComponent,
     GameOverComponent
   ],

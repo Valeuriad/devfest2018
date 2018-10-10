@@ -1,6 +1,7 @@
 .square {
     border: black solid thin;
-    background-image: url("../../../assets/square.png");
+ /*    background-image: url("../../../assets/square.png"); */
+    background-color: lightgrey;
     height: 64px;
     width: 64px;
     position: relative;
