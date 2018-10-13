@@ -181,8 +181,8 @@ def sample_train_images(data):
     plt.close()
 
 
-input_filename = "/home/ngreffard/devfest/2018/graphics/data/proc/tiles.csv"
-output_dir = "/home/ngreffard/devfest/2018/graphics/data/"
+input_filename = "/path/to/graphics/data/proc/tiles.csv"
+output_dir = "/path/to/graphics/data/"
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

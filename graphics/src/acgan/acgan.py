@@ -222,8 +222,8 @@ class ACGAN():
         save(self.discriminator, "discriminator")
 
 
-input_filename = "/home/ngreffard/devfest/2018/graphics/data/proc/pg.csv"
-output_dir = "/home/ngreffard/devfest/2018/graphics/data/"
+input_filename = "/path/to/graphics/data/proc/pg.csv"
+output_dir = "/path/to/graphics/data/"
 
 
 def sample_train_images(data):
